@@ -1,27 +1,17 @@
 import requests
-import json
 from datetime import datetime
 
 URL = "https://api.coingecko.com/api/v3/simple/price"
 PARAMS = {
-    "ids": "bitcoin,ethereum",
-    "vs_currencies": "usd"
+    "ids": "bitcoin,ethereum,cardano,solana",
+    "vs_currencies": "eur"
 }
 
 def extract():
     response = requests.get(URL, params=PARAMS)
-    data = response.json()
+    data = response.json()  
+    if response.status_code != 200:
+        raise Exception(f"API request failed with status code {response.status_code}")       
+   
     return data
 
-def save_local(data):
-    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    filename = f"crypto_{timestamp}.json"
-    
-    with open(filename, "w") as f:
-        json.dump(data, f)
-    
-    print(f"Saved: {filename}")
-
-if __name__ == "__main__":
-    data = extract()
-    save_local(data)
