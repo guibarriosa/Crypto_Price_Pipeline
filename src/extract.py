@@ -1,5 +1,4 @@
 import requests
-from datetime import datetime
 
 URL = "https://api.coingecko.com/api/v3/simple/price"
 PARAMS = {
@@ -15,3 +14,15 @@ def extract():
    
     return data
 
+def get_symbols():
+    response = requests.get("https://api.coingecko.com/api/v3/coins/list")
+    all_coins = response.json()
+    symbols = {}
+
+    coins = ["bitcoin", "ethereum", "cardano", "solana"]
+    for coin in all_coins:
+        if coin["id"] in coins:
+            symbols[coin["id"]] = coin["symbol"].upper()
+            
+    symbols_sorted= dict(sorted(symbols.items()))
+    return symbols_sorted
