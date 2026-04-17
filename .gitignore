@@ -1,6 +1,9 @@
 # Local python cache files
 __pycache__/
 
+# Local python environment variables
+.env
+
 # Local .terraform directories
 .terraform/
 
