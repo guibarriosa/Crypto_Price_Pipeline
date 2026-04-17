@@ -10,6 +10,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Terraform Apply
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: us-east-1
+        run: |
+          cd terraform
+          terraform init
+          terraform apply -auto-approve 
+          
       - name: Checkout code
         uses: actions/checkout@v3
 
@@ -36,12 +46,4 @@ jobs:
         run: |
           aws s3 cp lambda_package.zip s3://crypto-pipeline-gui/lambda/lambda_package.zip
 
-      #- name: Terraform Apply
-     #   env:
-     #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      #    AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      #    AWS_DEFAULT_REGION: us-east-1
-     #   run: |
-      #    cd terraform
-      #    terraform init
-      #    terraform apply -auto-approve
+      
