@@ -29,13 +29,6 @@ resource "aws_security_group" "lambda_sg" {
   vpc_id      = module.vpc.vpc_id  
 
   egress {
-    from_port       = 3306
-    to_port         = 3306
-    protocol        = "tcp"
-    security_groups = [aws_security_group.rds_sg.id]  
-  }
-
-  egress {
     from_port   = 443
     to_port     = 443
     protocol    = "tcp"
@@ -45,4 +38,22 @@ resource "aws_security_group" "lambda_sg" {
   tags = {
     Name = "Crypto Pipeline Lambda SG"
   }
+}
+
+resource "aws_security_group_rule" "lambda_to_rds" {
+  type                     = "egress"
+  from_port                = 3306
+  to_port                  = 3306
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.lambda_sg.id
+  source_security_group_id = aws_security_group.rds_sg.id
+}
+
+resource "aws_security_group_rule" "rds_from_lambda" {
+  type                     = "ingress"
+  from_port                = 3306
+  to_port                  = 3306
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.rds_sg.id
+  source_security_group_id = aws_security_group.lambda_sg.id
 }
