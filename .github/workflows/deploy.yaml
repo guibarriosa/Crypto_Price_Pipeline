@@ -39,7 +39,7 @@ jobs:
           terraform init
           terraform apply -auto-approve \
           -target=module.vpc \
-          -target=aws_s3_bucket.crypto_pipeline \
+          -target=aws_s3_bucket.crypto_bucket \
           -target=aws_security_group.rds_sg \
           -target=aws_db_subnet_group.crypto_subnets \
           -target=aws_db_instance.crypto_db \
@@ -48,6 +48,8 @@ jobs:
           -target=aws_iam_role_policy_attachment.lambda_vpc \
           -target=aws_iam_role_policy.lambda_s3 \
           -target=aws_security_group.lambda_sg
+          -target=aws_security_group_rule.lambda_to_rds
+          -target=aws_security_group_rule.rds_to_lambda
         
       - name: Install dependencies
         run: |
