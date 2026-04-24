@@ -4,6 +4,9 @@ from conn import initialize_db, conn_close
 from load import save_to_s3, save_to_database
 from queries import *
 
+def handler(event, context):
+    main()
+
 def main():
     raw_data = extract()
     processed_data = transform(raw_data)
@@ -19,6 +22,6 @@ def main():
     #show_prices()
     #delete_tables()
 
-'''if __name__ == "__main__":
-    main()   '''
+if __name__ == "__main__":
+    main()   
     
