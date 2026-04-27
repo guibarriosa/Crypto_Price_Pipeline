@@ -46,9 +46,22 @@ jobs:
             -target=aws_iam_role_policy_attachment.lambda_basic \
             -target=aws_iam_role_policy_attachment.lambda_vpc \
             -target=aws_iam_role_policy.lambda_s3 \
-            -target=aws_security_group.lambda_sg \
+            -target=aws_security_group.lambda_sg 
+            
+      - name: Terraform Apply - Create Security Group Rules
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: us-east-1
+          TF_VAR_db_password: ${{ secrets.DB_PASSWORD }}
+          TF_VAR_db_user: ${{ secrets.DB_USER }}
+          TF_VAR_db_name: ${{ secrets.DB_NAME }}
+          TF_VAR_my_ip: ${{ secrets.MY_IP }}
+        run: |
+          cd terraform
+          terraform apply -auto-approve \
             -target=aws_security_group_rule.lambda_to_rds \
-            -target=aws_security_group_rule.rds_from_lambda
+            -target=aws_security_group_rule.rds_from_lambda     
         
       - name: Install dependencies
         run: |
