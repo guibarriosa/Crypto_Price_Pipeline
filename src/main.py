@@ -1,6 +1,6 @@
-from extract import *
+from extract import extract, get_symbols
 from transform import transform
-from conn import initialize_db, conn_close
+from conn import get_connection, initialize_db, conn_close
 from load import save_to_s3, save_to_database
 from queries import *
 
@@ -8,6 +8,8 @@ def handler(event, context):
     main()
 
 def main():
+    get_connection()
+
     raw_data = extract()
     processed_data = transform(raw_data)
     symbols = get_symbols()

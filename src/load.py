@@ -1,7 +1,7 @@
 import boto3
 import json
 from datetime import datetime
-from conn import conn, cursor
+import conn as db   
 
 BUCKET_NAME = "crypto-pipeline-gui"
 
@@ -26,7 +26,7 @@ def save_to_database(json_data: list, symbols: dict):
     skipped = 0
 
     for coin_name in symbols.keys():
-        cursor.execute("INSERT IGNORE INTO crypto (name, symbol, currency) VALUES (%s, %s, %s)",
+        db.cursor.execute("INSERT IGNORE INTO crypto (name, symbol, currency) VALUES (%s, %s, %s)",
         (coin_name, symbols[coin_name], "EUR"))
 
         print(f"Crypto '{coin_name}' inserida ou já existe na tabela.")
@@ -36,8 +36,8 @@ def save_to_database(json_data: list, symbols: dict):
         price = round(entry["price_eur"], 6)
         date = datetime.now().replace(microsecond=0)  
 
-        cursor.execute("SELECT id FROM crypto WHERE name = %s", (coin_name,))
-        result = cursor.fetchone()
+        db.cursor.execute("SELECT id FROM crypto WHERE name = %s", (coin_name,))
+        result = db.cursor.fetchone()
         
         if result is None:
             print(f"['{coin_name}' não se encontra na tabela.")
@@ -46,14 +46,14 @@ def save_to_database(json_data: list, symbols: dict):
         
         crypto_id = result[0]
         
-        cursor.execute(
+        db.cursor.execute(
             "INSERT INTO prices (crypto_id, price, date) VALUES (%s, %s, %s)",
             (crypto_id, price, date)
         )
         inserted += 1
         print(f"Preço de '{coin_name}' inserido com sucesso: {price} EUR em {date}.")
     
-    conn.commit()
+    db.conn.commit()
     
     print(f"[OK] {inserted} preços inseridos, {skipped} ignorados.")
 
