@@ -4,6 +4,9 @@ __pycache__/
 # Local python environment variables
 .env
 
+# SSL certificate file, which may contain sensitive information and should not be committed to version control.
+global-bundle.pem
+
 # Local .terraform directories
 .terraform/
 
