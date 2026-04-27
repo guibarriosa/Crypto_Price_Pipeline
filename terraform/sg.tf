@@ -56,4 +56,6 @@ resource "aws_security_group_rule" "rds_from_lambda" {
   protocol                 = "tcp"
   security_group_id        = aws_security_group.rds_sg.id
   source_security_group_id = aws_security_group.lambda_sg.id
+
+  depends_on = [aws_security_group_rule.lambda_to_rds]  
 }
