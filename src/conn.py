@@ -14,7 +14,8 @@ def get_connection():
         user=os.getenv("DB_USER"),
         password=os.getenv("DB_PASSWORD"),
         database=os.getenv("DB_NAME"),
-        ssl_ca="global-bundle.pem"
+        ssl_disabled=True
+        #ssl_ca="global-bundle.pem"
     )
     cursor = conn.cursor()
     return conn, cursor
