@@ -59,6 +59,7 @@ jobs:
         run: |
           pip install requests mysql-connector-python --target ./package
           cp src/*.py package/
+          cp src/global-bundle.pem package/
 
       - name: Create zip
         run: |
