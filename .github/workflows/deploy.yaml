@@ -46,14 +46,7 @@ jobs:
             -target=aws_iam_role_policy_attachment.lambda_basic \
             -target=aws_iam_role_policy_attachment.lambda_vpc \
             -target=aws_iam_role_policy.lambda_s3 \
-            -target=aws_security_group.lambda_sg 
-            
-      - name: Terraform Apply - Create Security Group Rules
-        run: |
-          cd terraform
-          terraform apply -auto-approve \
-            -target=aws_security_group_rule.lambda_to_rds \
-            -target=aws_security_group_rule.rds_from_lambda     
+            -target=aws_security_group.lambda_sg  
         
       - name: Install dependencies
         run: |
