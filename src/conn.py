@@ -1,5 +1,5 @@
-import mysql.connector
 import os
+import pymysql
 
 '''from dotenv import load_dotenv
 load_dotenv()'''
@@ -9,12 +9,12 @@ cursor = None
 
 def get_connection():
     global conn, cursor
-    conn = mysql.connector.connect(
+    conn = pymysql.connect(
         host=os.getenv("DB_HOST"),
         user=os.getenv("DB_USER"),
         password=os.getenv("DB_PASSWORD"),
         database=os.getenv("DB_NAME"),
-        ssl_disabled=True
+        ssl_disabled=True,
         #ssl_ca="global-bundle.pem"
     )
     cursor = conn.cursor()
