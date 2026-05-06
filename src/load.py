@@ -24,18 +24,21 @@ def save_to_database(json_data: list, symbols: dict):
     
     inserted = 0
     skipped = 0
-
+    
+    print("A. A guardar coins na tabela 'crypto'...")
     for coin_name in symbols.keys():
         db.cursor.execute("INSERT IGNORE INTO crypto (name, symbol, currency) VALUES (%s, %s, %s)",
         (coin_name, symbols[coin_name], "EUR"))
 
         print(f"Crypto '{coin_name}' inserida ou já existe na tabela.")
     
+    print("B. A guardar preços na tabela 'prices'...")
     for entry in json_data:
         coin_name = entry["coin"]
         price = round(entry["price_eur"], 6)
         date = datetime.now().replace(microsecond=0)  
 
+        print(f"Processando preço de '{coin_name}': {price} EUR em {date}...")
         db.cursor.execute("SELECT id FROM crypto WHERE name = %s", (coin_name,))
         result = db.cursor.fetchone()
         
@@ -45,14 +48,14 @@ def save_to_database(json_data: list, symbols: dict):
             continue
         
         crypto_id = result[0]
-        
+        print(f"ID de '{coin_name}' encontrado: {crypto_id}. Inserindo preço...")
         db.cursor.execute(
             "INSERT INTO prices (crypto_id, price, date) VALUES (%s, %s, %s)",
             (crypto_id, price, date)
         )
         inserted += 1
         print(f"Preço de '{coin_name}' inserido com sucesso: {price} EUR em {date}.")
-    
+    print("C. A confirmar transações na base de dados...")
     db.conn.commit()
     
     print(f"[OK] {inserted} preços inseridos, {skipped} ignorados.")
