@@ -25,7 +25,7 @@ resource "aws_lambda_function" "crypto_pipeline" {
   }
 
   vpc_config {
-    subnet_ids         = module.vpc.public_subnets
+    subnet_ids         = module.vpc.private_subnets
     security_group_ids = [aws_security_group.lambda_sg.id]
   }
 
