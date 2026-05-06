@@ -57,7 +57,7 @@ jobs:
         
       - name: Install dependencies
         run: |
-          pip install requests mysql-connector-python --target ./package
+          pip install requests PyMySQL --target ./package
           cp src/*.py package/
           cp src/global-bundle.pem package/
 
