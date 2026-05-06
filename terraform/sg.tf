@@ -11,6 +11,14 @@ resource "aws_security_group" "rds_sg" {
     description     = "Allow MySQL access from specific IP"
   }
 
+  ingress {
+    from_port       = 3306
+    to_port         = 3306
+    protocol        = "tcp"
+    cidr_blocks     = [module.vpc.vpc_cidr_block]
+    description     = "Allow MySQL access from within VPC"
+  }
+
   egress {
     from_port   = 0
     to_port     = 0
@@ -35,27 +43,17 @@ resource "aws_security_group" "lambda_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  egress {
+    from_port       = 3306
+    to_port         = 3306
+    protocol        = "tcp"
+    cidr_blocks     = [module.vpc.vpc_cidr_block]
+    description     = "Allow MySQL access from within VPC"
+  }
+
   tags = {
     Name = "Crypto Pipeline Lambda SG"
   }
 }
 
-resource "aws_security_group_rule" "lambda_to_rds" {
-  type                     = "egress"
-  from_port                = 3306
-  to_port                  = 3306
-  protocol                 = "tcp"
-  security_group_id        = aws_security_group.lambda_sg.id
-  source_security_group_id = aws_security_group.rds_sg.id
-}
-
-resource "aws_security_group_rule" "rds_from_lambda" {
-  type                     = "ingress"
-  from_port                = 3306
-  to_port                  = 3306
-  protocol                 = "tcp"
-  security_group_id        = aws_security_group.rds_sg.id
-  source_security_group_id = aws_security_group.lambda_sg.id
-
-  depends_on = [aws_security_group_rule.lambda_to_rds]  
-}
+ 
