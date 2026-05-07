@@ -63,9 +63,11 @@ jobs:
         run: |
           aws s3 cp lambda_package.zip s3://crypto-pipeline-gui/lambda/lambda_package.zip
 
-      - name: Terraform Apply - Create Lambda Function
+      - name: Terraform Apply - Create Lambda Function and EventBridge
         run: |
           cd terraform
           terraform apply -auto-approve \
-            -target=aws_lambda_function.crypto_pipeline
-      
+            -target=aws_lambda_function.crypto_pipeline \
+            -target=aws_cloudwatch_event_rule.crypto_lambda_schedule \
+            -target=aws_cloudwatch_event_target.crypto_lambda_target \
+            -target=aws_lambda_permission.allow_eventbridge
