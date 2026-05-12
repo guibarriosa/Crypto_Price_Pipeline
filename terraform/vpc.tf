@@ -12,7 +12,7 @@ module "vpc" {
 
 
   tags = {
-    Name = "My Vpc"
+    Name = "Crypto Pipeline Vpc"
   }
 
   public_subnet_tags = {

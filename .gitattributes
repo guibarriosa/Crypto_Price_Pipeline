@@ -1,0 +1,2 @@
+# Tell GitHub Linguist to not count Terraform files as the primary language
+*.tf linguist-detectable=false
