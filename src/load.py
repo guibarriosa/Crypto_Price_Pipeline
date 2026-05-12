@@ -42,7 +42,7 @@ def save_to_database(data: list, symbols: dict):
     for entry in data:
         coin_name = entry["coin"]
         price = round(entry["price"], 6)
-        # Remove microseconds, we dont need that level of precision for our use case 
+        # Remove microseconds, we dont need that level of precision for our project 
         # and it can cause issues with MySQL datetime format
         date = datetime.now().replace(microsecond=0)  
 
