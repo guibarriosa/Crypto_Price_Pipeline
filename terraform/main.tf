@@ -1,6 +1,6 @@
 terraform {
   backend "s3" {
-    bucket = "crypto-pipeline-tfstates"
+    bucket = "crypto-pipeline-tfstates" # Insert your S3 bucket for backend here. Make sure this bucket exists before running the project.
     key    = "terraform/terraform.tfstate"
     region = "us-east-1"
   }

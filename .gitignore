@@ -4,6 +4,10 @@ __pycache__/
 # Local python environment variables
 .env
 
+# Local testing files
+src/test.py
+src/queries.py
+
 # Local .terraform directories
 .terraform/
 
@@ -17,3 +21,4 @@ __pycache__/
 # to change depending on the environment.
 *.tfvars
 *.tfvars.json
+

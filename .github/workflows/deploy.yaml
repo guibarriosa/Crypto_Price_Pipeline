@@ -1,4 +1,6 @@
-name: Deploy Lambda
+# Infrastructure is applied in two steps to ensure the Lambda zip
+# is uploaded to S3 before the Lambda function resource is created.
+name: Deploy Infrastructure
 
 on:
   push:
@@ -32,7 +34,7 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Terraform Apply - Create infrastructure
+      - name: Terraform Apply - Create Infrastructure
         run: |
           cd terraform
           terraform init
@@ -42,7 +44,7 @@ jobs:
             -target=aws_security_group.rds_sg \
             -target=aws_db_subnet_group.crypto_subnets \
             -target=aws_db_instance.crypto_db \
-            -target=aws_iam_role.lambda_exec \
+            -target=aws_iam_role.lambda_role \
             -target=aws_iam_role_policy_attachment.lambda_basic \
             -target=aws_iam_role_policy_attachment.lambda_vpc \
             -target=aws_iam_role_policy.lambda_s3 \
@@ -52,7 +54,6 @@ jobs:
         run: |
           pip install requests PyMySQL --target ./package
           cp src/*.py package/
-          cp src/global-bundle.pem package/
 
       - name: Create zip
         run: |

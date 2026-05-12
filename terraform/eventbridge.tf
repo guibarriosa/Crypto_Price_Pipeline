@@ -1,8 +1,8 @@
-# Here we define an EventBridge rule that triggers every 2 minutes
+# Here we define an EventBridge rule that triggers every 10 minutes
 resource "aws_cloudwatch_event_rule" "crypto_lambda_schedule" {
   name                = "crypto-lambda-schedule"
-  description         = "Trigger crypto pipeline every 2 minutes"
-  schedule_expression = "rate(2 minutes)"
+  description         = "Trigger crypto pipeline every 10 minutes"
+  schedule_expression = "rate(10 minutes)"
 }
 
 # Here we link the EventBridge rule to the Lambda function

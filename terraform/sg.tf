@@ -3,11 +3,13 @@ resource "aws_security_group" "rds_sg" {
   description = "Security group for RDS instance"
   vpc_id = module.vpc.vpc_id
 
+  # Development only — allows direct MySQL access from a specific IP.
+  # Remove in production.
   ingress {
     from_port       = 3306
     to_port         = 3306
     protocol        = "tcp"
-    cidr_blocks     = [var.my_ip]
+    cidr_blocks     = [var.my_ip] # Dont forget to set this variable to your IP address in CIDR notation 
     description     = "Allow MySQL access from specific IP"
   }
 

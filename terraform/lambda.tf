@@ -1,18 +1,20 @@
 resource "aws_lambda_function" "crypto_pipeline" {
   function_name = "crypto-pipeline-function"
-  description   = "Extrai preços de crypto da CoinGecko, guarda em S3 e RDS"
+  description   = "Extracts prices from CoinGecko, stores in S3 and RDS"
 
-  s3_bucket = "crypto-pipeline-gui"
-  s3_key    = "lambda/lambda_package.zip"
+  s3_bucket = aws_s3_bucket.crypto_bucket.bucket 
+  s3_key    = "lambda/lambda_package.zip" # This should match the key of the zip file you upload to S3
 
   runtime = "python3.11"
   handler = "main.handler"  
 
-  role = aws_iam_role.lambda_exec.arn
+  role = aws_iam_role.lambda_role.arn
 
-  timeout     = 30   # segundos — a API CoinGecko pode ser lenta
-  memory_size = 128  # MB — ajusta conforme necessário
+  timeout     = 30   
+  memory_size = 256 
 
+  # Dont forget to set these variables in your terraform.tfvars file 
+  # with the appropriate values for your RDS instance.
   environment {
     variables = {
       DB_HOST     = aws_db_instance.crypto_db.address 
@@ -20,7 +22,7 @@ resource "aws_lambda_function" "crypto_pipeline" {
       DB_NAME     = var.db_name
       DB_USER     = var.db_user
       DB_PASSWORD = var.db_password
-      S3_BUCKET   = "crypto-pipeline-gui"
+      S3_BUCKET   = aws_s3_bucket.crypto_bucket.bucket 
     }
   }
 
@@ -36,5 +38,6 @@ resource "aws_lambda_function" "crypto_pipeline" {
   depends_on = [
     aws_iam_role_policy_attachment.lambda_basic,
     aws_iam_role_policy_attachment.lambda_vpc,
+    aws_iam_role_policy.lambda_s3,
   ]
 }

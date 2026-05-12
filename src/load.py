@@ -2,11 +2,13 @@ import boto3
 import json
 from datetime import datetime
 import conn as db   
+from extract import PARAMS
 
-BUCKET_NAME = "crypto-pipeline-gui"
+BUCKET_NAME = "crypto-pipeline-gui" # Insert your bucket name here
+
+s3 = boto3.client("s3")
 
 def save_to_s3(data, prefix):
-    s3 = boto3.client("s3")
 
     timestamp = datetime.now().strftime("%HH-%MM-%SS")
     key = f"{prefix}/Year={datetime.now().year}/Month={datetime.now().month}/Day={datetime.now().day}/crypto_{timestamp}.json"
@@ -20,43 +22,45 @@ def save_to_s3(data, prefix):
         ContentType="application/json"
     )
 
-def save_to_database(json_data: list, symbols: dict):
+def save_to_database(data: list, symbols: dict):
     
     inserted = 0
-    skipped = 0
     
-    print("A. A guardar coins na tabela 'crypto'...")
+    # Create crypto entries first, then insert prices. This way we avoid foreign key constraint errors 
+    # and ensure all cryptos are present in the crypto table before inserting prices.
     for coin_name in symbols.keys():
-        db.cursor.execute("INSERT IGNORE INTO crypto (name, symbol, currency) VALUES (%s, %s, %s)",
-        (coin_name, symbols[coin_name], "EUR"))
+        db.cursor.execute(
+            "INSERT IGNORE INTO crypto (name, symbol, currency) VALUES (%s, %s, %s)",
+            (coin_name, symbols[coin_name], PARAMS["vs_currencies"].upper())
+        )
 
-        print(f"Crypto '{coin_name}' inserida ou já existe na tabela.")
+        if db.cursor.rowcount == 1:
+            print(f"'{coin_name}' in '{PARAMS['vs_currencies'].upper()}' inserted into the table.")
+        else:
+            print(f"'{coin_name}' in '{PARAMS['vs_currencies'].upper()}' already exists in the table.")
     
-    print("B. A guardar preços na tabela 'prices'...")
-    for entry in json_data:
+    for entry in data:
         coin_name = entry["coin"]
-        price = round(entry["price_eur"], 6)
+        price = round(entry["price"], 6)
+        # Remove microseconds, we dont need that level of precision for our use case 
+        # and it can cause issues with MySQL datetime format
         date = datetime.now().replace(microsecond=0)  
 
-        print(f"Processando preço de '{coin_name}': {price} EUR em {date}...")
-        db.cursor.execute("SELECT id FROM crypto WHERE name = %s", (coin_name,))
-        result = db.cursor.fetchone()
-        
-        if result is None:
-            print(f"['{coin_name}' não se encontra na tabela.")
-            skipped += 1
-            continue
-        
-        crypto_id = result[0]
-        print(f"ID de '{coin_name}' encontrado: {crypto_id}. Inserindo preço...")
         db.cursor.execute(
-            "INSERT INTO prices (crypto_id, price, date) VALUES (%s, %s, %s)",
+            "SELECT id FROM crypto WHERE name = %s AND currency = %s", 
+            (coin_name, PARAMS["vs_currencies"].upper())
+        )
+        result = db.cursor.fetchone()
+        crypto_id = result[0]
+
+        print(f"Price for '{coin_name}' in '{PARAMS['vs_currencies'].upper()}' inserted: {price}.")
+        db.cursor.execute(
+            "INSERT INTO prices (crypto_id, price, date) VALUES (%s, %s, %s)", 
             (crypto_id, price, date)
         )
         inserted += 1
-        print(f"Preço de '{coin_name}' inserido com sucesso: {price} EUR em {date}.")
-    print("C. A confirmar transações na base de dados...")
+
     db.conn.commit()
     
-    print(f"[OK] {inserted} preços inseridos, {skipped} ignorados.")
+    print(f"{inserted} prices inserted.")
 
