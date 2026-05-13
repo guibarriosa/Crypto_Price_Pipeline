@@ -10,7 +10,7 @@ resource "aws_security_group" "rds_sg" {
     to_port         = 3306
     protocol        = "tcp"
     cidr_blocks     = [var.my_ip] # Dont forget to set this variable to your IP address in CIDR notation 
-    description     = "Allow MySQL access from specific IP"
+    description     = "Allow RDS access from specific IP"
   }
 
   ingress {
@@ -18,7 +18,7 @@ resource "aws_security_group" "rds_sg" {
     to_port         = 3306
     protocol        = "tcp"
     cidr_blocks     = [module.vpc.vpc_cidr_block]
-    description     = "Allow MySQL access from within VPC"
+    description     = "Allow RDS access from within VPC"
   }
 
   egress {
@@ -43,6 +43,7 @@ resource "aws_security_group" "lambda_sg" {
     to_port     = 443
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
+    description = "Allow Lambda to access external services over HTTPS"
   }
 
   egress {
@@ -50,7 +51,7 @@ resource "aws_security_group" "lambda_sg" {
     to_port         = 3306
     protocol        = "tcp"
     cidr_blocks     = [module.vpc.vpc_cidr_block]
-    description     = "Allow MySQL access from within VPC"
+    description     = "Allow Lambda to access RDS instance within VPC"
   }
 
   tags = {
