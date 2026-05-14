@@ -27,8 +27,8 @@ An automated ETL pipeline that extracts real-time cryptocurrency prices from the
 
 ## 📁 Project Structure
 
-├── .github/
-│   └── workflows/
+├── .github/ <br>
+│   └── workflows/ <br>
 │       └── [deploy.yaml](.github/workflows/deploy.yaml) — CI/CD pipeline
 ├── docs/
 │   └── [Crypto_Pipeline_Schema.png](docs/Crypto_Pipeline_Schema.png) — Architecture diagram
