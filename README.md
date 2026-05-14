@@ -27,32 +27,29 @@ An automated ETL pipeline that extracts real-time cryptocurrency prices from the
 
 ## 📁 Project Structure
 
-```
-Crypto_Price_Pipeline/
 ├── .github/
 │   └── workflows/
-│       └── [deploy.yaml](.github/workflows/deploy.yaml)                  # CI/CD pipeline
-├── schema/
-│   └── [Crypto_Pipeline_Schema.png](docs/Crypto_Pipeline_Schema.png)   # Architecture diagram
+│       └── [deploy.yaml](.github/workflows/deploy.yaml) — CI/CD pipeline
+├── docs/
+│   └── [Crypto_Pipeline_Schema.png](docs/Crypto_Pipeline_Schema.png) — Architecture diagram
 ├── src/
-│   ├── [main.py](src/main.py)                                            # Lambda handler + orchestration
-│   ├── [extract.py](src/extract.py)                                      # CoinGecko API extraction
-│   ├── [transform.py](src/transform.py)                                  # Data transformation
-│   ├── [load.py](src/load.py)                                            # S3 and RDS loading
-│   └── [conn.py](src/conn.py)                                            # RDS connection management
+│   ├── [main.py](src/main.py) — Lambda handler + orchestration
+│   ├── [extract.py](src/extract.py) — CoinGecko API extraction
+│   ├── [transform.py](src/transform.py) — Data transformation
+│   ├── [load.py](src/load.py) — S3 and RDS loading
+│   └── [conn.py](src/conn.py) — RDS connection management
 ├── terraform/
-│   ├── [main.tf](terraform/main.tf)                                      # Terraform backend + provider
-│   ├── [vpc.tf](terraform/vpc.tf)                                        # VPC module
-│   ├── [lambda.tf](terraform/lambda.tf)                                  # Lambda function
-│   ├── [rds.tf](terraform/rds.tf)                                        # RDS instance
-│   ├── [s3.tf](terraform/s3.tf)                                          # S3 bucket
-│   ├── [iam.tf](terraform/iam.tf)                                        # IAM roles and policies
-│   ├── [sg.tf](terraform/sg.tf)                                          # Security groups
-│   ├── [eventbridge.tf](terraform/eventbridge.tf)                        # EventBridge schedule
-│   └── [variables.tf](terraform/variables.tf)                            # Input variables
+│   ├── [main.tf](terraform/main.tf) — Terraform backend + provider
+│   ├── [vpc.tf](terraform/vpc.tf) — VPC module
+│   ├── [lambda.tf](terraform/lambda.tf) — Lambda function
+│   ├── [rds.tf](terraform/rds.tf) — RDS instance
+│   ├── [s3.tf](terraform/s3.tf) — S3 bucket
+│   ├── [iam.tf](terraform/iam.tf) — IAM roles and policies
+│   ├── [sg.tf](terraform/sg.tf) — Security groups
+│   ├── [eventbridge.tf](terraform/eventbridge.tf) — EventBridge schedule
+│   └── [variables.tf](terraform/variables.tf) — Input variables
 ├── [.gitattributes](.gitattributes)
 └── [.gitignore](.gitignore)
-```
 
 ---
 
