@@ -13,8 +13,7 @@ resource "aws_lambda_function" "crypto_pipeline" {
   timeout     = 30   
   memory_size = 256 
 
-  # Dont forget to set these variables in your terraform.tfvars file 
-  # with the appropriate values for your RDS instance.
+  # Dont forget to set these variables in your github secrets or terraform variables file
   environment {
     variables = {
       DB_HOST     = aws_db_instance.crypto_db.address 
