@@ -147,5 +147,5 @@ GitHub Actions handles the full deployment automatically.
 
 - [ ] Migrate RDS to private subnets with bastion host
 - [ ] Add CloudWatch alarms and SNS notifications for pipeline failures
-- [ ] Add data visualisation dashboard
+- [ ] Containerize Lambda deployment with Docker
 - [ ] Implement Apache Kafka (AWS MSK) for real-time price streaming
