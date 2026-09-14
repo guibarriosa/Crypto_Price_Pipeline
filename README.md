@@ -48,8 +48,8 @@ An automated ETL pipeline that extracts real-time cryptocurrency prices from the
 │   ├── [sg.tf](terraform/sg.tf) — Security groups <br>
 │   ├── [eventbridge.tf](terraform/eventbridge.tf) — EventBridge schedule <br>
 │   └── [variables.tf](terraform/variables.tf) — Input variables <br>
-├── [.dockerfile](.dockerfile) <br> — Docker Image for local testing
-├── [.requirements.txt](.requirements.txt) <br> — Python dependencies 
+├── [.dockerfile](.dockerfile) — Docker Image for local testing <br>
+├── [.requirements.txt](.requirements.txt) — Python dependencies <br>
 ├── [.gitattributes](.gitattributes) <br>
 └── [.gitignore](.gitignore) <br>
 
