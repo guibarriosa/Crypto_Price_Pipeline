@@ -91,6 +91,7 @@ Push to main
 - AWS account with programatic access
 - Terraform >= 1.5.0
 - Python 3.11
+- Docker Desktop (optional — only required for local container testing, see Docker section)
 
 ### Steps
 
@@ -143,9 +144,37 @@ GitHub Actions handles the full deployment automatically.
 
 ---
 
+## 🐳 Docker
+
+The Lambda function can also be built and tested locally as a Docker container, using AWS's official Lambda Runtime Interface Emulator (RIE) for local testing.
+
+### Build the image
+
+```bash
+docker build -t crypto_pipeline .
+```
+
+### Run and test locally
+
+```bash
+docker run -d -p 8080:8080 crypto_pipeline
+```
+
+### To confirm the handler is invoked:
+
+```bash
+curl.exe -X POST "http://localhost:8080/2015-03-31/functions/function/invocations" -d '{}'
+```
+
+> **Note:** Since the Lambda connects to an RDS instance inside a private VPC subnet, local invocations will fail at the database connection step. This just confirms the image builds correctly and the handler executes as expected. 
+
+The current CI/CD pipeline still deploys via GitHub Actions — the Dockerfile is provided for local development and as groundwork for a future migration to Amazon ECR (see Future Improvements).
+
+---
+
 ## 🚧 Future Improvements
 
 - [ ] Migrate RDS to private subnets with bastion host
 - [ ] Add CloudWatch alarms and SNS notifications for pipeline failures
-- [ ] Containerize Lambda deployment with Docker
-- [ ] Implement Apache Kafka (AWS MSK) for real-time price streaming
+- [X] Containerize Lambda deployment with Docker
+- [ ] Migrate Lambda deployment to container image via Amazon ECR
